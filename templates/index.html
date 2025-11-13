@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ヌメロンゲーム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        input {
+            font-size: 1.2em;
+            padding: 5px;
+            width: 100px;
+            text-align: center;
+        }
+
+        button {
+            font-size: 1.2em;
+            padding: 5px 10px;
+        }
+
+        p {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ヌメロンゲーム</h1>
+    <form method="POST">
+        <input type="text" name="guess" placeholder="数字を入力" maxlength="3">
+        <button type="submit">送信</button>
+    </form>
+    <p>{{ result }}</p>
+</body>
+
+</html>
