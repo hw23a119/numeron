@@ -34,7 +34,7 @@ def index():
             if len(history) > 5:
                 history.pop()
 
-    return render_template("index.html", result=result, history=history)
-
+# ← ここで answer を渡す
+    return render_template("index.html", result=result, answer=''.join(map(str, answer)))
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)
