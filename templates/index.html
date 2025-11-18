@@ -3,39 +3,74 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>ヌメロンゲーム</title>
+    <title>Numeron</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 10px;
         }
 
         input {
-            font-size: 1.2em;
-            padding: 5px;
-            width: 100px;
-            text-align: center;
+            font-size: 18px;
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
         }
 
         button {
-            font-size: 1.2em;
-            padding: 5px 10px;
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
         }
 
-        p {
-            font-size: 1.5em;
+        .result {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .history-box {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f3f3f3;
+            border-radius: 8px;
+        }
+
+        .history-item {
+            padding: 5px 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
 
 <body>
-    <h1>ヌメロンゲーム</h1>
+
+    <h2>Numeron</h2>
+
     <form method="POST">
-        <input type="text" name="guess" placeholder="数字を入力" maxlength="3">
-        <button type="submit">送信</button>
+        <input type="text" name="guess" placeholder="3桁の数字を入力" maxlength="3">
+        <button type="submit">判定する</button>
     </form>
-    <p>{{ result }}</p>
+
+    <div class="result">{{ result }}</div>
+
+    <!-- ▼ 履歴表示 ▼ -->
+    <div class="history-box">
+        <h3>履歴（最新 5件）</h3>
+        {% for item in history %}
+        <div class="history-item">
+            <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
+        </div>
+        {% endfor %}
+    </div>
+
 </body>
 
 </html>
