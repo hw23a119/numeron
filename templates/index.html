@@ -4,79 +4,42 @@
 <head>
     <meta charset="UTF-8">
     <title>数当てゲーム</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 20px auto;
-            padding: 10px;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        input {
-            font-size: 18px;
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-        }
-
-        button {
-            margin-top: 10px;
-            width: 100%;
-            padding: 10px;
-            font-size: 18px;
-        }
-
-        .result {
-            margin-top: 15px;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
-        .history-box {
-            margin-top: 20px;
-            padding: 10px;
-            background: #f3f3f3;
-            border-radius: 8px;
-        }
-
-        .history-item {
-            padding: 5px 0;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .history-item:last-child {
-            border-bottom: none;
-        }
-    </style>
+    <!-- 外部CSSを読み込み -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
-    <h2>数当てゲーム</h2>
-    //<p style="color: red;">デバッグ用：答えは {{ answer }}</p>
-    {% if last_answer %}
-    <p>✅ 前回の答え：{{ last_answer }}</p>
-    {% endif %}
+    <div class="container">
 
-    <form method="POST">
-        <input type="text" name="guess" placeholder="3桁の数字を入力" maxlength="3">
-        <button type="submit">判定する</button>
-        <a href="/reset">
-            <button type="button">🔄 リセット</button>
-        </a>
+        <h2>数当てゲーム</h2>
 
-    </form>
+        {% if last_answer %}
+        <p class="last-answer">✅ 前回の答え：{{ last_answer }}</p>
+        {% endif %}
 
-    <div class="result">{{ result }}</div>
+        <form method="POST" class="game-form">
+            <input type="text" name="guess" placeholder="3桁の数字を入力" maxlength="3" autocomplete="off">
+            <button type="submit" class="btn">判定する</button>
 
-    <!-- ▼ 履歴表示 ▼ -->
-    <div class="history-box">
-        <h3>履歴（最新 5件）</h3>
-        {% for item in history %}
-        <div class="history-item">
-            <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
+            <a href="/reset" class="reset-link">
+                <button type="button" class="btn reset-btn">🔄 リセット</button>
+            </a>
+        </form>
+
+        <div class="result">{{ result }}</div>
+
+        <div class="history-box">
+            <h3>履歴（最新 5件）</h3>
+            {% for item in history %}
+            <div class="history-item">
+                <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+
     </div>
 
 </body>
