@@ -2,55 +2,34 @@
 <html lang="ja">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWKVTL0L6T"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-FWKVTL0L6T');
-    </script>
-
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Numeron</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
     <div class="container">
         <h1>Numeron</h1>
 
-        <!-- 説明追加 -->
+        {% if request.args.get('last') %}
+        <p>✅ 前回の答え：{{ request.args.get('last') }}</p>
+        {% endif %}
+
         <div class="rule-box">
             <p><strong>EAT：</strong>位置と数字が一致</p>
             <p><strong>BITE：</strong>数字だけ一致（位置は違う）</p>
         </div>
 
-        <!-- デバッグ用（答え表示） -->
-        <p style="color:red;">デバッグ用：答えは {{ answer }}</p>
-
-        {% if last_answer %}
-        <p>✅ 前回の答え：{{ last_answer }}</p>
-        {% endif %}
-
-        <!-- 判定フォーム -->
-        <form method="POST" action="/">
-            <input type="text" name="guess" maxlength="3" placeholder="3桁の数字を入力" required />
+        <form method="POST">
+            <input type="text" name="guess" placeholder="3桁の数字" maxlength="3">
             <button type="submit">判定</button>
         </form>
 
-        <!-- リロード / 履歴リセット -->
-        <div class="button-row">
-            <button type="button" onclick="location.href='/reset'">🔄 リロード</button>
-            <button type="button" onclick="location.href='/clear_history'">履歴リセット</button>
-        </div>
+        <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
 
-        <!-- 結果表示 -->
         <div class="result">{{ result }}</div>
 
-        <!-- 履歴表示 -->
         <div class="history-box">
             <h3>履歴（最新5件）</h3>
             {% for item in history %}
