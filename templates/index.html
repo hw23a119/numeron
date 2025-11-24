@@ -13,8 +13,8 @@
         <h1>Numeron</h1>
 
         <!-- 前回の答え -->
-        {% if request.args.get('last') %}
-        <p>✅ 前回の答え：{{ request.args.get('last') }}</p>
+        {% if last_answer %}
+        <p>✅ 前回の答え：{{ last_answer }}</p>
         {% endif %}
 
         <!-- ゲームルール -->
@@ -23,26 +23,20 @@
             <p><strong>BITE：</strong>数字だけ一致（位置は違う）</p>
         </div>
 
-        <!-- 数字入力 & 判定ボタン -->
+        <!-- 入力フォーム + ボタン -->
         <form method="POST">
             <input type="text" name="guess" placeholder="3桁の数字" maxlength="3" required>
             <button type="submit" name="guessBtn">判定</button>
-        </form>
-
-        <!-- ヒントボタン -->
-        <form method="POST">
             <button type="submit" name="hintBtn">💡 ヒント</button>
         </form>
 
-        <!-- 新しい数字（リセット）ボタン -->
-        <a href="{{ url_for('reset') }}">
-            <button type="button">🔄 新しい数字</button>
-        </a>
+        <!-- リロードボタン -->
+        <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
 
         <!-- 判定結果 -->
         <div class="result">{{ result }}</div>
 
-        <!-- ヒント表示 -->
+        <!-- ヒント結果 -->
         {% if hint_message %}
         <div class="hint-box">{{ hint_message }}</div>
         {% endif %}
@@ -62,7 +56,6 @@
             {% endif %}
             {% endfor %}
         </div>
-
     </div>
 </body>
 
