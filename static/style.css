@@ -16,13 +16,11 @@ body {
 }
 
 input {
+    font-size: 18px;
     width: 100%;
-    padding: 14px;
-    font-size: 20px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    text-align: center;
-    margin-bottom: 15px;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
 }
 
 button {
