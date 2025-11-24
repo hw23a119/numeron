@@ -12,42 +12,32 @@
     <div class="container">
         <h1>Numeron</h1>
 
-        <!-- 前回の答え -->
-        {% if last_answer %}
-        <p>✅ 前回の答え：{{ last_answer }}</p>
+        {% if request.args.get('last') %}
+        <p>✅ 前回の答え：{{ request.args.get('last') }}</p>
         {% endif %}
 
-        <!-- ゲームルール -->
         <div class="rule-box">
             <p><strong>EAT：</strong>位置と数字が一致</p>
             <p><strong>BITE：</strong>数字だけ一致（位置は違う）</p>
         </div>
 
-        <!-- 入力フォームとボタン -->
         <form method="POST">
-            <input type="text" name="guess" placeholder="3桁の数字" maxlength="3" required>
-            <button type="submit" name="guess">判定</button>
-            <button type="submit" name="hint">💡 ヒント</button>
-            <button type="submit" name="reset">🔄 新しい数字</button>
+            <input type="text" name="guess" placeholder="3桁の数字" maxlength="3">
+            <button type="submit">判定</button>
         </form>
 
-        <!-- 判定結果 -->
+        <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
+
         <div class="result">{{ result }}</div>
 
-        <!-- 履歴表示 -->
         <div class="history-box">
             <h3>履歴（最新5件）</h3>
             {% for item in history %}
-            {% if item.type == 'guess' %}
             <div class="history-item">
                 <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
             </div>
-            {% elif item.type == 'hint' %}
-            <div class="history-item">💡 {{ item.message }}</div>
-            {% endif %}
             {% endfor %}
         </div>
-
     </div>
 </body>
 
