@@ -12,24 +12,37 @@
     <div class="container">
         <h1>Numeron</h1>
 
+        <!-- 前回の答え -->
         {% if request.args.get('last') %}
         <p>✅ 前回の答え：{{ request.args.get('last') }}</p>
         {% endif %}
 
+        <!-- ゲームルール -->
         <div class="rule-box">
             <p><strong>EAT：</strong>位置と数字が一致</p>
             <p><strong>BITE：</strong>数字だけ一致（位置は違う）</p>
         </div>
 
+        <!-- 入力フォーム -->
         <form method="POST">
-            <input type="text" name="guess" placeholder="3桁の数字" maxlength="3">
+            <input type="text" name="guess" placeholder="3桁の数字" maxlength="3" required>
             <button type="submit">判定</button>
         </form>
 
-        <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
+        <!-- リロードボタン -->
+        <form method="GET" action="{{ url_for('reset') }}">
+            <button type="submit">🔄 新しい数字</button>
+        </form>
 
+        <!-- ヒントボタン -->
+        <form method="GET" action="{{ url_for('hint') }}">
+            <button type="submit">💡 ヒント</button>
+        </form>
+
+        <!-- 判定結果 -->
         <div class="result">{{ result }}</div>
 
+        <!-- 履歴表示 -->
         <div class="history-box">
             <h3>履歴（最新5件）</h3>
             {% for item in history %}
@@ -38,6 +51,14 @@
             </div>
             {% endfor %}
         </div>
+
+        <!-- ヒント結果 -->
+        {% if hint %}
+        <div class="hint-box">
+            <p>ヒント：{{ hint }}</p>
+        </div>
+        {% endif %}
+
     </div>
 </body>
 
