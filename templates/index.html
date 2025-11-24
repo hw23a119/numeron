@@ -2,59 +2,47 @@
 <html lang="ja">
 
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWKVTL0L6T"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-FWKVTL0L6T');
-    </script>
-
     <meta charset="UTF-8">
     <title>数当てゲーム</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- 外部CSSを読み込み -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-
 <body>
-
     <div class="container">
-
         <h2>数当てゲーム</h2>
 
+        <!-- EAT/BITEの説明 -->
+        <div class="explain">
+            <strong>EAT</strong>：位置と数字が両方合っている<br>
+            <strong>BITE</strong>：数字は合っているが位置が違う
+        </div>
+
         {% if last_answer %}
-        <p class="last-answer">✅ 前回の答え：{{ last_answer }}</p>
+        <p class="last-answer" style="margin:0 0 10px 0; color:#2b8a3e;">✅ 前回の答え：{{ last_answer }}</p>
         {% endif %}
 
-        <h3>EAT:位置と数が合っている BITE:数が合っている</h3>
-
-        <form method="POST" class="game-form">
-            <input type="text" name="guess" placeholder="3桁の数字を入力" maxlength="3" autocomplete="off">
-            <button type="submit" class="btn">判定する</button>
-
+        <form method="POST" class="game-form" autocomplete="off">
+            <input type="tel" name="guess" placeholder="3桁の数字を入力（例: 523）" maxlength="3" inputmode="numeric"
+                pattern="[0-9]*" required>
+            <button type="submit" class="btn btn-judge">判定する</button>
             <a href="/reset" class="reset-link">
-                <button type="button" class="btn reset-btn">🔄 リセット</button>
+                <div class="btn btn-reset">🔄 リセット（今回の答えを表示して新しいゲーム）</div>
             </a>
         </form>
 
         <div class="result">{{ result }}</div>
 
         <div class="history-box">
-            <h3>履歴（最新 5件）</h3>
+            <h3 style="margin:10px 0 8px 0;">履歴（最新 5件）</h3>
             {% for item in history %}
             <div class="history-item">
-                <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
+                <div class="history-left">{{ item.guess }}</div>
+                <div class="history-right">{{ item.eat }} EAT / {{ item.bite }} BITE</div>
             </div>
             {% endfor %}
         </div>
-
     </div>
-
 </body>
 
 </html>
