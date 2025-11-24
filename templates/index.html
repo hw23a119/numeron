@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Numeron</title>
+    <title>数当てゲーム</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,12 +52,19 @@
 
 <body>
 
-    <h2>Numeron</h2>
-    <p style="color: red;">デバッグ用：答えは {{ answer }}</p>
+    <h2>数当てゲーム</h2>
+    //<p style="color: red;">デバッグ用：答えは {{ answer }}</p>
+    {% if last_answer %}
+    <p>✅ 前回の答え：{{ last_answer }}</p>
+    {% endif %}
 
     <form method="POST">
         <input type="text" name="guess" placeholder="3桁の数字を入力" maxlength="3">
         <button type="submit">判定する</button>
+        <a href="/reset">
+            <button type="button">🔄 リセット</button>
+        </a>
+
     </form>
 
     <div class="result">{{ result }}</div>

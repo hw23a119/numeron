@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import random
 
 app = Flask(__name__)
@@ -13,6 +13,9 @@ history = []   # ← 追加
 @app.route("/", methods=["GET", "POST"])
 def index():
     result = ""
+
+    # ✅ リセット時に送られてくる値（なければ空欄）
+    last_answer = request.args.get("last", "")
 
     if request.method == "POST":
         guess = request.form.get("guess", "")
@@ -29,12 +32,33 @@ def index():
             else:
                 result = f"{eat} EAT, {bite} BITE"
 
-            # ▼▼ 履歴に追加 ▼▼
+            # ✅ 履歴に追加
             history.insert(0, {"guess": guess, "eat": eat, "bite": bite})
             if len(history) > 5:
                 history.pop()
 
-# ← ここで answer を渡す
-    return render_template("index.html", result=result, answer=''.join(map(str, answer)))
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    # ✅ last_answer と history をHTMLに渡すよう変更！
+    return render_template(
+        "index.html",
+        result=result,
+        answer=''.join(map(str, answer)),
+        last_answer=last_answer,
+        history=history
+    )
+
+
+@app.route("/reset")
+def reset():
+    global answer, history
+
+    # 直前の答えを保存
+    last_answer = ''.join(map(str, answer))
+
+    # 新しい答えを生成
+    answer = [random.randint(0, 9) for _ in range(3)]
+
+    # 履歴リセット
+    history = []
+
+    # 「前回の答え」をURLパラメータで渡す
+    return redirect(url_for("index", last=last_answer))
