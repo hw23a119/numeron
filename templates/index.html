@@ -15,7 +15,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Numeron</title>
-    <link rel="stylesheet" href="static/style.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 
 <body>
@@ -28,19 +28,38 @@
             <p><strong>BITE：</strong>数字だけ一致（位置は違う）</p>
         </div>
 
-        <input type="text" id="guessInput" maxlength="3" placeholder="3桁の数字" />
+        <!-- デバッグ用（答え表示） -->
+        <p style="color:red;">デバッグ用：答えは {{ answer }}</p>
 
+        {% if last_answer %}
+        <p>✅ 前回の答え：{{ last_answer }}</p>
+        {% endif %}
+
+        <!-- 判定フォーム -->
+        <form method="POST" action="/">
+            <input type="text" name="guess" maxlength="3" placeholder="3桁の数字を入力" required />
+            <button type="submit">判定</button>
+        </form>
+
+        <!-- リロード / 履歴リセット -->
         <div class="button-row">
-            <button id="guessBtn">判定</button>
-            <button id="reloadBtn">リロード</button>
-            <button id="resetBtn">履歴リセット</button>
+            <button type="button" onclick="location.href='/reset'">🔄 リロード</button>
+            <button type="button" onclick="location.href='/clear_history'">履歴リセット</button>
         </div>
 
-        <h2>履歴</h2>
-        <ul id="historyList"></ul>
-    </div>
+        <!-- 結果表示 -->
+        <div class="result">{{ result }}</div>
 
-    <script src="static/script.js"></script>
+        <!-- 履歴表示 -->
+        <div class="history-box">
+            <h3>履歴（最新5件）</h3>
+            {% for item in history %}
+            <div class="history-item">
+                <strong>{{ item.guess }}</strong> → {{ item.eat }} EAT / {{ item.bite }} BITE
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </body>
 
 </html>
