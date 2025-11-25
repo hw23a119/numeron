@@ -28,6 +28,10 @@
 
         <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
 
+        {% if request.args.get('hint') %}
+        <p class="hint">{{ request.args.get('hint') }}</p>
+        {% endif %}
+
         <div class="result">{{ result }}</div>
 
         <div class="history-box">

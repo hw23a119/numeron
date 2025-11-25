@@ -53,3 +53,12 @@ def reset():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)
+
+@app.route("/hint")
+def hint():
+    global answer
+    idx = random.randint(0, 2)  # 0=左,1=真ん中,2=右
+    position = ["左", "真ん中", "右"][idx]
+    hint_msg = f"💡 {position}の数字は {answer[idx]} です"
+    return redirect(url_for("index", hint=hint_msg))
+
