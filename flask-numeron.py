@@ -61,9 +61,14 @@ def hint():
 
 @app.route("/reset")
 def reset():
+    last_answer = ''.join(map(str, session.get("answer", [])))
+    session["last_answer"] = last_answer
+
     session["answer"] = generate_answer()
     session["history"] = []
-    return redirect(url_for("index", last="前の答えは非表示（セッション方式）"))
+
+    return redirect(url_for("index"))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5001, debug=True)

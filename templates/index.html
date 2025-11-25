@@ -21,9 +21,10 @@
     <div class="container">
         <h1>Numeron</h1>
 
-        {% if request.args.get('last') %}
-        <p>✅ 前回の答え：{{ request.args.get('last') }}</p>
+        {% if session.get('last_answer') %}
+        <p>前回の答え：{{ session['last_answer'] }}</p>
         {% endif %}
+
 
         <div class="rule-box">
             <p><strong>EAT：</strong>位置と数字が一致</p>
