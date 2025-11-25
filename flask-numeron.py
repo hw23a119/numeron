@@ -1,64 +1,69 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 import random
 
 app = Flask(__name__)
+app.secret_key = "your_secret_key_here"  # ← 何でもいいので文字列を入れてください
 
-# ランダム答え（重複なし） — シャッフル方式
-numbers = list(range(10))
-random.shuffle(numbers)
-answer = numbers[:3]
-print(f"(デバッグ) 答え: {answer}")
-
-# 履歴を保持（最新5件）
-history = []
+# --- 答えを生成する関数 ---
+def generate_answer():
+    digits = list(range(10))
+    random.shuffle(digits)
+    return digits[:3]  # シャッフル後の先頭3つ（重複なし）
 
 @app.route("/", methods=["GET", "POST"])
 def index():
-    result = ""
+    # ユーザーごとの答えが無かったら生成
+    if "answer" not in session:
+        session["answer"] = generate_answer()
+        session["history"] = []
 
+    answer = session["answer"]
+    history = session.get("history", [])
+    result = ""
+    
     if request.method == "POST":
         guess = request.form.get("guess", "")
+
         if len(guess) != 3 or not guess.isdigit():
             result = "⚠️ 3桁の数字を入力してください"
         else:
             guess_digits = [int(n) for n in guess]
+
             eat = sum(1 for i in range(3) if guess_digits[i] == answer[i])
-            bite = sum(1 for i in range(3) if guess_digits[i] in answer) - eat
+            bite = sum(1 for n in guess_digits if n in answer) - eat
 
             if eat == 3:
                 result = f"🎉 正解！ 答えは {''.join(map(str, answer))}"
             else:
                 result = f"{eat} EAT, {bite} BITE"
 
-            # 履歴追加
+            # 履歴更新
             history.insert(0, {"guess": guess, "eat": eat, "bite": bite})
             if len(history) > 5:
                 history.pop()
 
+            session["history"] = history
+
     return render_template("index.html", result=result, history=history)
-
-@app.route("/reset")
-def reset():
-    global answer, history
-    last_answer = ''.join(map(str, answer))
-
-    # 新しい答え（重複なし） — シャッフル方式
-    numbers = list(range(10))
-    random.shuffle(numbers)
-    answer = numbers[:3]
-
-    history = []
-    print(f"(デバッグ) 新しい答え: {answer}")
-    return redirect(url_for("index", last=last_answer))
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5001, debug=True)
 
 @app.route("/hint")
 def hint():
-    global answer
-    idx = random.randint(0, 2)  # 0=左,1=真ん中,2=右
-    position = ["左", "真ん中", "右"][idx]
-    hint_msg = f"💡 {position}の数字は {answer[idx]} です"
-    return redirect(url_for("index", hint=hint_msg))
+    if "answer" not in session:
+        return redirect(url_for("index"))
 
+    answer = session["answer"]
+
+    # ランダムで1つヒントを出す
+    idx = random.choice([0, 1, 2])
+    hint_text = ["左の数字は ", "真ん中の数字は ", "右の数字は "][idx] + str(answer[idx])
+
+    return redirect(url_for("index", hint=hint_text))
+
+@app.route("/reset")
+def reset():
+    session["answer"] = generate_answer()
+    session["history"] = []
+    return redirect(url_for("index", last="前の答えは非表示（セッション方式）"))
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5001, debug=True)
