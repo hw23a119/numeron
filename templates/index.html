@@ -2,6 +2,15 @@
 <html lang="ja">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FWKVTL0L6T"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-FWKVTL0L6T');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Numeron</title>
@@ -27,6 +36,7 @@
         </form>
 
         <a href="{{ url_for('reset') }}"><button>🔄 新しい数字</button></a>
+        <a href="{{ url_for('hint') }}"><button>💡 ヒント</button></a>
 
         {% if request.args.get('hint') %}
         <p class="hint">{{ request.args.get('hint') }}</p>
